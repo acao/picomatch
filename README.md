@@ -118,12 +118,31 @@ Creates a matcher function from one or more glob patterns. The returned function
 
 **Example**
 
+By default, `picomatch` uses [`os.platform()`](https://nodejs.org/api/os.html#osplatform) to detect the operating system.
+
 ```js
 const picomatch = require('picomatch');
 // picomatch(glob[, options]);
 
 const isMatch = picomatch('*.!(*a)');
 console.log(isMatch('a.a')); //=> false
+console.log(isMatch('a.b')); //=> true
+```
+
+**Example without node.js**
+
+For environments without `node.js`, `picomatch/posix` provides you a dependency-free matcher, without automatic OS detection.
+
+```js
+const picomatch = require('picomatch/posix');
+// the same API, defaulting to posix paths
+const isMatch = picomatch('a/*');
+console.log(isMatch('a\\b')); //=> false
+console.log(isMatch('a/b')); //=> true
+
+// you can still configure the matcher function to accept windows paths
+const isMatch = picomatch('a/*', { options: windows });
+console.log(isMatch('a\\a')); //=> true
 console.log(isMatch('a.b')); //=> true
 ```
 
